@@ -1,10 +1,7 @@
 import re
-from itertools import permutations
-
-all_perms = list(map(lambda x: ''.join(x), permutations(['a', 'b', 'c', 'd', 'e', 'f', 'g'])))
 
 def get_data():
-    with open("input2.txt", "r") as file:
+    with open("input.txt", "r") as file:
         lines = file.readlines()
         lines = [line.split(' | ') for line in lines]
         lines = [[line[0].strip().split(' '), line[1].strip().split(' ')] for line in lines]
@@ -26,39 +23,44 @@ def get_from_line(line, *nums):
         result += line[num]
     return ''.join(sorted(result))
 
-def get_dicts():
-    super_dict = dict()
-    for perm in all_perms:
-        dictionary = dict()
-        dictionary[get_from_line(perm, 0, 1, 2, 4, 5, 6)] = '0'
-        dictionary[get_from_line(perm, 2, 5)] = '1'
-        dictionary[get_from_line(perm, 0, 2, 3, 4, 6)] = '2'
-        dictionary[get_from_line(perm, 0, 2, 3, 5, 6)] = '3'
-        dictionary[get_from_line(perm, 1, 2, 3, 5)] = '4'
-        dictionary[get_from_line(perm, 0, 1, 3, 5, 6)] = '5'
-        dictionary[get_from_line(perm, 0, 1, 3, 4, 5, 6)] = '6'
-        dictionary[get_from_line(perm, 0, 2, 5)] = '7'
-        dictionary[''.join(sorted(perm))] = '8'
-        dictionary[get_from_line(perm, 0, 1, 2, 3, 5, 6)] = '9'
-        super_dict[perm] = dictionary
-    return super_dict
+def guess(num, base):
+    if len(num) == 6:
+        matches_one = all([c in num  for c in base[0]])
+        matches_four = all([c in num for c in base[2]])
+        if matches_one:
+            if matches_four:
+                return '9'
+            return '0'
+        return '6'
+    elif len(num) == 5:
+        matches_one = all([c in num for c in base[0]])
+        how_many_in_four = sum([1 for c in num if c in base[2]])
+        if matches_one:
+            return '3'
+        if how_many_in_four == 3:
+            return '5'
+        return '2'
+    else:
+        sorted_bases = [sorted(c) for c in base]
+        idx = sorted_bases.index(sorted(num))
+        if idx == 0:
+            return '1'
+        elif idx == 1:
+            return '7'
+        elif idx == 2:
+            return '4'
+        return '8'
+
 
 def quiz2():
     lines = get_data()
-    super_dict = get_dicts()
-    total = 0
+    summed = 0
     for line in lines:
-        eight = [num for num in line[0] if len(num) == 7][0]
-        print(eight)
-        perm_dict = super_dict[eight]
-        print(perm_dict)
-        print(line[1])
-        number = int(''.join([perm_dict[''.join(sorted(num))] for num in line[1]]))
-        total += number
-
-    return total
+        base = sorted([num for num in line[0] if len(num) in [2, 3, 4, 7]], key=len)
+        guesses = [guess(num, base) for num in line[1]]
+        summed += int(''.join(guesses))
+    return summed
 
 if __name__ == '__main__':
     print(quiz1())
     print(quiz2())
-    # print(all_perms)
