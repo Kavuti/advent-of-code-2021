@@ -1,5 +1,5 @@
 def get_data():
-    with open("input2.txt", "r") as file:
+    with open("input.txt", "r") as file:
         return [l.strip() for l in file.readlines()]
 
 def get_opposite(par):
@@ -23,6 +23,20 @@ def get_points(par):
         return 1197
     return 25137
 
+def get_points_quiz2(line):
+    score = 0
+    for par in line:
+        score *= 5
+        if par == ')':
+            score += 1
+        elif par == ']':
+            score += 2
+        elif par == '}':
+            score += 3
+        else:
+            score += 4
+    return score  
+
 def quiz1():
     lines = get_data()
     total = 0
@@ -42,7 +56,7 @@ def quiz1():
 
 def quiz2():
     lines = get_data()
-    stacks = []
+    scores = []
     for line in lines:
         par_stack = []
         valid = True
@@ -56,9 +70,10 @@ def quiz2():
                 else:
                     par_stack.pop(0)
         if valid:
-            stacks.append(''.join(par_stack))
+            scores.append(get_points_quiz2(''.join(par_stack)))
         
-    return stacks
+    scores.sort()
+    return scores[len(scores) // 2]
 
 if __name__ == '__main__':
     print(quiz1())
