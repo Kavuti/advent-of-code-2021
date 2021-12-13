@@ -53,7 +53,7 @@ def quiz2():
     result = ""
     for row in array:
         for col in row:
-            result += "#" if col else "."
+            result += "#" if col else " "
         result += "\n"
     return result
 
