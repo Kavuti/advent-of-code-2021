@@ -1,5 +1,5 @@
 def get_data():
-    with open("input2.txt", "r") as file:
+    with open("C:/Users/c.cavuti/Desktop/advent-of-code-2021/day14/input2.txt", "r") as file:
         lines = [l.strip() for l in file.readlines()]
         com_dict = dict()
         for command in lines[2:]:
@@ -9,7 +9,7 @@ def get_data():
 
 def quiz1():
     line, commands = get_data()
-    for _ in range(10):
+    for _ in range(3):
         new_line = ""
         for i in range(len(line)-1):
             part = line[i:i+2]
@@ -43,11 +43,12 @@ def quiz2():
         occ_copy = occurrences.copy()
         for k, v in occurrences.items():
             if v > 0:
-                occurrences[k] = 0
+                occ_copy[k] = 0
                 new_first = k[0]+commands[k]
                 new_second = commands[k] + k[1]
                 occ_copy[new_first] += v
                 occ_copy[new_second] += v
+            #print(occurrences)
         occurrences = occ_copy
 
 
