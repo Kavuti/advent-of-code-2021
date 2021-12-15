@@ -39,10 +39,16 @@ def quiz2():
     for i in range(len(line)-1):
         occurrences[line[i]+line[i+1]] = 1
 
-    for i in range(40):
+    for i in range(3):
         occ_copy = occurrences.copy()
         for k, v in occurrences.items():
-            occurrences[k] -= 1
+            if v > 0:
+                occurrences[k] = 0
+                new_first = k[0]+commands[k]
+                new_second = commands[k] + k[1]
+                occ_copy[new_first] += v
+                occ_copy[new_second] += v
+        occurrences = occ_copy
 
 
     print(occurrences)
