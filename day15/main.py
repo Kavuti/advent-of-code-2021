@@ -30,12 +30,12 @@ def dijkstra(graph, weights):
     repeat = True
     while repeat:
         repeat = False
-        to_visit = {(pos[0]+1, pos[1]) for pos in to_visit if pos[0] < graph.shape[0]-1 and not visited[pos[0]+1, pos[1]]} | {(pos[0], pos[1]+1) for pos in to_visit if pos[1] < graph.shape[1]-1 and not visited[pos[0], pos[1]+1]}        print(len(to_visit))
+        to_visit = {(pos[0]+1, pos[1]) for pos in to_visit if pos[0] < graph.shape[0]-1 and not visited[pos[0]+1, pos[1]]} | {(pos[0], pos[1]+1) for pos in to_visit if pos[1] < graph.shape[1]-1 and not visited[pos[0], pos[1]+1]}
         for new_pos in to_visit:
             visited[new_pos] = True
             to_compare = get_to_compare(*new_pos, graph.shape[0]-1, graph.shape[1]-1)
             current_weight = weights[new_pos]
-            minimum = min([weights[pos] + graph[new_pos] for pos in to_compare] + [current_weight])
+            minimum = min([weights[pos] + graph[pos] for pos in to_compare] + [current_weight])
             if minimum < current_weight:
                 repeat = True
                 weights[new_pos] = minimum
