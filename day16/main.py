@@ -1,5 +1,5 @@
 def get_data():
-    with open("input2.txt", "r") as file:
+    with open("/home/christian/Scrivania/advent-of-code-2021/day16/input2.txt", "r") as file:
         stringed = file.read()
         binary = ""
         for char in stringed:
@@ -19,7 +19,7 @@ def get_total_length(packet):
     return int(packet[7:22], 2)
 
 def extract_packet(packet):
-    if get_packet_version(packet) == 4:
+    if get_packet_type(packet) == 'literal':
         curr_char = 6
         while packet[curr_char] == '1':
             curr_char += 5
@@ -35,22 +35,29 @@ def extract_subpackets(subpackets):
     while len(subpackets) >= 11:
         packet = extract_packet(subpackets)
         packets.append(packet)
-        subpackets = subpackets.replace(packet, '')
+        subpackets = subpackets[len(packet):]
     return packets
 
 def get_packet_versions_sum(packet):
-    if get_packet_type(packet) == 4:
+    if get_packet_type(packet) == 'literal':
         return get_packet_version(packet)
     else:
         if get_length_type(packet) == 0:
             total_length = get_total_length(packet)
-            return get_packet_version(packet) + sum([get_packet_versions_sum(p) for p in extract_subpackets(packet[23:])])
+            subpackets = extract_subpackets(packet[22:])
+            return get_packet_version(packet) + sum([get_packet_versions_sum(p) for p in subpackets])
         else:
-            return get_packet_version(packet) + sum([get_packet_versions_sum(p) for p in extract_subpackets(packet[7:])])
+            subpackets = extract_subpackets(packet[7:])
+            return get_packet_version(packet) + sum([get_packet_versions_sum(p) for p in subpackets])
 
             
+def test():
+    return extract_packet('1101000101001010010001001000000000')
+
 def quiz1():
+    print(get_data())
     return get_packet_versions_sum(get_data())
 
 if __name__ == '__main__':
     print(quiz1())
+    print(test())
